@@ -1,5 +1,22 @@
 const net = require("net");
+const readline = require("readline/promises");
 
-const client = net.createConnection({ host: "127.0.0.1", port: 3007 }, () => {
-  console.log("Connected to server.");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const socket = net.createConnection(
+  { host: "127.0.0.1", port: 3007 },
+  async () => {
+    console.log("Connected to server.");
+
+    const message = await rl.question("Enter your message > ");
+
+    socket.write(message);
+  }
+);
+
+socket.on("end", () => {
+  console.log("Connection was ended.");
 });
