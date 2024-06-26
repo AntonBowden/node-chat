@@ -8,6 +8,11 @@ server.on("connection", (socket) => {
   console.log("New connection to the server.");
 
   const clientId = clients.length + 1;
+
+  clients.map((client) => {
+    client.socket.write(`User ${clientId} joined!`);
+  });
+
   socket.write(`id-${clientId}`);
 
   socket.on("data", (data) => {
@@ -17,6 +22,12 @@ server.on("connection", (socket) => {
 
     clients.map((client) => {
       client.socket.write(`> User ${id}: ${message}`);
+    });
+  });
+
+  socket.on("end", () => {
+    clients.map((client) => {
+      client.socket.write(`User ${clientId} left!`);
     });
   });
 
